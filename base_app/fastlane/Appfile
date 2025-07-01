@@ -1,0 +1,7 @@
+# iOS
+app_identifier("jp.morson.example.baseApp") # iOS Bundle ID
+apple_id("tatebe@morson.jp") # Apple Developer ID
+team_id("YJ8CUK9YZ7") # Developer Portal Team ID
+
+# Android
+package_name("com.example.base_app") # Android Package Name

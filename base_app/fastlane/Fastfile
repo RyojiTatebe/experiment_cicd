@@ -1,0 +1,64 @@
+platform :ios do
+  desc "Runs tests and distributes the iOS app to Firebase App Distribution"
+  lane :beta_ios do |options|
+    # 1. 依存関係のインストール (CocoaPodsなど)
+    # cocoapods(clean: true) # 必要であれば
+
+    # 2. コード署名のセットアップ
+    match(type: "development") # テストビルド用
+    # match(type: "appstore") # または App Store Connect API Key を使った自動署名 (推奨)
+
+    # 3. Flutter iOS ビルド
+    flutter(
+      build_ios_scheme: "Runner", # Xcode Scheme名
+      build_ios_configuration: "Release", # または Debug
+      build_ios_build_number: ENV["BUILD_NUMBER"] || Time.now.to_i.to_s,
+      build_ios_build_method: "development", # "app-store", "development", "ad-hoc"
+      build_ios_export_path: "./build/ios"
+    )
+
+    # 4. Firebase App Distribution へのアップロード
+    firebase_app_distribution(
+      app: "jp.morson.example.baseApp", # Firebase Consoleから取得
+      firebase_cli_path: "/usr/local/bin/firebase", # CI環境のパスに合わせる
+      groups: "testers_ios", # 配布先のグループ名
+      release_notes: options[:release_notes] || "Latest iOS build from CI/CD.",
+      debug: false
+    )
+
+    # Slackなどへの通知
+    # slack(message: "iOS build pushed to Firebase App Distribution for testing!")
+  end
+end
+
+platform :android do
+  desc "Runs tests and distributes the Android app to Firebase App Distribution"
+  lane :beta_android do |options|
+    # 1. Flutter Android ビルド
+    flutter(
+      build_android_build_mode: "release", # "debug", "profile", "release"
+      build_android_target_platform: "android-arm64", # "android-arm", "android-arm64", "android-x64", "android-x86", "android-x64"
+      build_android_build_type: "apk", # "apk" or "appbundle"
+      build_android_split_per_abi: true, # APKの場合
+      build_android_build_number: ENV["BUILD_NUMBER"] || Time.now.to_i.to_s,
+      build_android_export_path: "./build/android",
+      # 署名情報（GitHub Actions の Secrets から環境変数として渡す）
+      build_android_signing_keystore_path: ENV["KEYSTORE_PATH"],
+      build_android_signing_keystore_password: ENV["KEYSTORE_PASSWORD"],
+      build_android_signing_key_alias: ENV["KEY_ALIAS"],
+      build_android_signing_key_password: ENV["KEY_PASSWORD"]
+    )
+
+    # 2. Firebase App Distribution へのアップロード
+    firebase_app_distribution(
+      app: "com.example.base_app", # Firebase Consoleから取得
+      firebase_cli_path: "/usr/local/bin/firebase", # CI環境のパスに合わせる
+      groups: "testers_android", # 配布先のグループ名
+      release_notes: options[:release_notes] || "Latest Android build from CI/CD.",
+      debug: false
+    )
+
+    # Slackなどへの通知
+    # slack(message: "Android build pushed to Firebase App Distribution for testing!")
+  end
+end

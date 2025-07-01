@@ -1,0 +1,106 @@
+name: Flutter CI/CD to Firebase App Distribution
+
+on:
+  push:
+    branches:
+      - develop # 開発ブランチへのプッシュでテストビルドを配布
+
+jobs:
+  build_and_distribute_ios:
+    runs-on: macos-latest # iOSビルドにはmacOS環境が必要
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2 # Flutter SDKのセットアップ
+        with:
+          channel: 'stable' # 'stable', 'beta', 'dev'
+
+      - name: Install Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.x' # fastlaneが動作するRubyバージョン
+
+      - name: Install Bundler dependencies
+        run: bundle install
+
+      - name: Install Firebase CLI
+        run: curl -sL https://firebase.tools | bash
+
+      - name: Install CocoaPods (for iOS)
+        run: |
+          gem install cocoapods # GitHub Actions環境にCocoaPodsをインストール
+          pod repo update # 必要であれば
+          cd ios && pod install --repo-update && cd .. # iOSプロジェクトのPodをインストール
+
+      - name: Setup fastlane match (for iOS)
+        run: |
+          bundle exec fastlane match appstore --readonly # または development
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          # App Store Connect API Key を使用する場合 (推奨)
+          APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
+          FASTLANE_ITC_KEY_ID: ${{ secrets.FASTLANE_ITC_KEY_ID }}
+          FASTLANE_ITC_ISSUER_ID: ${{ secrets.FASTLANE_ITC_ISSUER_ID }}
+
+      - name: Run Flutter Tests
+        run: flutter test
+
+      - name: Distribute iOS build to Firebase App Distribution
+        run: bundle exec fastlane ios beta_ios release_notes:"GitHub Actionsからの最新iOSテストビルド - #${{ github.run_number }}"
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          BUILD_NUMBER: ${{ github.run_number }} # fastlaneにビルド番号を渡す
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
+          FASTLANE_ITC_KEY_ID: ${{ secrets.FASTLANE_ITC_KEY_ID }}
+          FASTLANE_ITC_ISSUER_ID: ${{ secrets.FASTLANE_ITC_ISSUER_ID }}
+
+
+  build_and_distribute_android:
+    runs-on: ubuntu-latest # AndroidビルドはLinuxで可
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17' # Android Studioで推奨されるJavaバージョン
+
+      - name: Install Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.x'
+
+      - name: Install Bundler dependencies
+        run: bundle install
+
+      - name: Install Firebase CLI
+        run: curl -sL https://firebase.tools | bash
+
+      - name: Create Android Keystore (for Debug/Release)
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > android_signing_keystore.jks
+        env:
+          KEYSTORE_PATH: android_signing_keystore.jks # fastlaneに渡すパス
+
+      - name: Run Flutter Tests
+        run: flutter test
+
+      - name: Distribute Android build to Firebase App Distribution
+        run: bundle exec fastlane android beta_android release_notes:"GitHub Actionsからの最新Androidテストビルド - #${{ github.run_number }}"
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          BUILD_NUMBER: ${{ github.run_number }} # fastlaneにビルド番号を渡す
+          KEYSTORE_PATH: android_signing_keystore.jks # キーストアのパスを渡す
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
