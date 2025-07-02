@@ -20,7 +20,7 @@ jobs:
       - name: Install Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.x' # fastlaneが動作するRubyバージョン
+          ruby-version: '3.4.4' # fastlaneが動作するRubyバージョン
 
       - name: Install Bundler dependencies
         run: bundle install
@@ -78,7 +78,7 @@ jobs:
       - name: Install Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.x'
+          ruby-version: '3.4.4'
 
       - name: Install Bundler dependencies
         run: bundle install
