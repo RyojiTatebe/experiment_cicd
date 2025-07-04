@@ -23,6 +23,7 @@ jobs:
           ruby-version: '3.4.4' # fastlaneが動作するRubyバージョン
 
       - name: Install Bundler dependencies
+        working-directory: .
         run: bundle install
 
       - name: Install Firebase CLI
