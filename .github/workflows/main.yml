@@ -30,6 +30,7 @@ jobs:
         run: curl -sL https://firebase.tools | bash
 
       - name: Install CocoaPods (for iOS)
+        working-directory: ./base_app
         run: |
           gem install cocoapods # GitHub Actions環境にCocoaPodsをインストール
           pod repo update # 必要であれば
