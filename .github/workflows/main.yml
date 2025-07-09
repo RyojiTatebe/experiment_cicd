@@ -47,6 +47,7 @@ jobs:
           FASTLANE_ITC_KEY_ID: ${{ secrets.FASTLANE_ITC_KEY_ID }}
           FASTLANE_ITC_ISSUER_ID: ${{ secrets.FASTLANE_ITC_ISSUER_ID }}
           CERT_REPO_PAT: ${{ secrets.CERT_REPO_PAT}}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
 
       # - name: Run Flutter Tests
       #   run: flutter test
