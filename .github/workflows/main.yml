@@ -59,6 +59,7 @@ jobs:
           APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
           FASTLANE_ITC_KEY_ID: ${{ secrets.FASTLANE_ITC_KEY_ID }}
           FASTLANE_ITC_ISSUER_ID: ${{ secrets.FASTLANE_ITC_ISSUER_ID }}
+          CERT_REPO_PAT: ${{ secrets.CERT_REPO_PAT}}
 
 
   # build_and_distribute_android:
