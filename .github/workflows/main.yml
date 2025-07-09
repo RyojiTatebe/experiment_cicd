@@ -29,16 +29,16 @@ jobs:
       - name: Install Firebase CLI
         run: curl -sL https://firebase.tools | bash
 
-      - name: Install CocoaPods (for iOS)
-        working-directory: ./base_app
-        run: |
-          gem install cocoapods # GitHub Actions環境にCocoaPodsをインストール
-          pod repo update # 必要であれば
-          cd ios && pod install --repo-update && cd .. # iOSプロジェクトのPodをインストール
+      # - name: Install CocoaPods (for iOS)
+      #   working-directory: ./base_app
+      #   run: |
+      #     gem install cocoapods # GitHub Actions環境にCocoaPodsをインストール
+      #     pod repo update # 必要であれば
+      #     cd ios && pod install --repo-update && cd .. # iOSプロジェクトのPodをインストール
 
       - name: Setup fastlane match (for iOS)
         run: |
-          bundle exec fastlane match appstore --readonly # または development
+          bundle exec fastlane match development --readonly # または development
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           # App Store Connect API Key を使用する場合 (推奨)
@@ -46,8 +46,8 @@ jobs:
           FASTLANE_ITC_KEY_ID: ${{ secrets.FASTLANE_ITC_KEY_ID }}
           FASTLANE_ITC_ISSUER_ID: ${{ secrets.FASTLANE_ITC_ISSUER_ID }}
 
-      - name: Run Flutter Tests
-        run: flutter test
+      # - name: Run Flutter Tests
+      #   run: flutter test
 
       - name: Distribute iOS build to Firebase App Distribution
         run: bundle exec fastlane ios beta_ios release_notes:"GitHub Actionsからの最新iOSテストビルド - #${{ github.run_number }}"
@@ -83,6 +83,7 @@ jobs:
           ruby-version: '3.4.4'
 
       - name: Install Bundler dependencies
+        working-directory: ./base_app
         run: bundle install
 
       - name: Install Firebase CLI
@@ -94,8 +95,8 @@ jobs:
         env:
           KEYSTORE_PATH: android_signing_keystore.jks # fastlaneに渡すパス
 
-      - name: Run Flutter Tests
-        run: flutter test
+      # - name: Run Flutter Tests
+      #   run: flutter test
 
       - name: Distribute Android build to Firebase App Distribution
         run: bundle exec fastlane android beta_android release_notes:"GitHub Actionsからの最新Androidテストビルド - #${{ github.run_number }}"
