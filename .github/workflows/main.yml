@@ -38,7 +38,7 @@ jobs:
 
       - name: Setup fastlane match (for iOS)
         run: |
-          bundle exec fastlane match development --readonly # または development
+          cd ios && bundle exec fastlane match development --readonly # または development
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           # App Store Connect API Key を使用する場合 (推奨)
