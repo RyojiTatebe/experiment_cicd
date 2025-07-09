@@ -1,4 +1,4 @@
-git_url("https://oauth2:#{ENV['CERT_REPO_PAT’]}@github.com/RyojiTatebe/certificates.git")
+git_url("https://oauth2:#{ENV['CERT_REPO_PAT']}@github.com/RyojiTatebe/certificates.git")
 
 storage_mode("git")
 
