@@ -35,10 +35,22 @@ jobs:
       #     gem install cocoapods # GitHub Actions環境にCocoaPodsをインストール
       #     pod repo update # 必要であれば
       #     cd ios && pod install --repo-update && cd .. # iOSプロジェクトのPodをインストール
+      - name: Check if CERT_REPO_PAT secret is set
+        run: |
+          if [ -z "${{ secrets.CERT_REPO_PAT }}" ]; then
+            echo "Error: CERT_REPO_PAT secret is not set or empty!"
+            exit 1
+          else
+            echo "CERT_REPO_PAT secret is set."
+          fi
 
       - name: Setup fastlane match (for iOS)
         working-directory: ./base_app
         run: |
+          echo "Debug: MATCH_GIT_URL will be used for cloning."
+          echo "Debug: Git URL host: $(echo $MATCH_GIT_URL | sed 's/.*@//' | cut -d'/' -f1)"
+          echo "Debug: Git URL path: $(echo $MATCH_GIT_URL | sed 's/.*@.*github.com//')"
+
           bundle exec fastlane match development --readonly # または development
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
