@@ -48,6 +48,7 @@ jobs:
           FASTLANE_ITC_ISSUER_ID: ${{ secrets.FASTLANE_ITC_ISSUER_ID }}
           CERT_REPO_PAT: ${{ secrets.CERT_REPO_PAT}}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_GIT_URL: https://x-access-token:${{secrets.CERT_REPO_PAT}}@github.com/RyojiTatebe/certificates.git
 
       # - name: Run Flutter Tests
       #   run: flutter test
