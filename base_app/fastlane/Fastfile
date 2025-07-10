@@ -11,7 +11,7 @@ platform :ios do
     # 3. Flutter iOS ビルド
     flutter(
       build_ios_scheme: "Runner", # Xcode Scheme名
-      build_ios_configuration: "Release", # または Debug
+      build_ios_configuration: "Debug", # または Debug
       build_ios_build_number: ENV["BUILD_NUMBER"] || Time.now.to_i.to_s,
       build_ios_build_method: "development", # "app-store", "development", "ad-hoc"
       build_ios_export_path: "./build/ios"
