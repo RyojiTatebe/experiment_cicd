@@ -3,6 +3,7 @@ platform :ios do
   lane :beta_ios do |options|
     # 1. 依存関係のインストール (CocoaPodsなど)
     # cocoapods(clean: true) # 必要であれば
+    UI.message("APP_STORE_CONNECT_API_KEY present: #{!ENV['APP_STORE_CONNECT_API_KEY'].nil?}")
 
     # 2. コード署名のセットアップ
     match(
