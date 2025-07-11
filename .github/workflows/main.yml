@@ -73,18 +73,18 @@ jobs:
           FASTLANE_ITC_KEY_ID: ${{ secrets.FASTLANE_ITC_KEY_ID }}
           FASTLANE_ITC_ISSUER_ID: ${{ secrets.FASTLANE_ITC_ISSUER_ID }}
         run: |
-          cat <<EOF > $(pwd)/fastlane_api_key.json
-          {
-            "key_id": "${FASTLANE_ITC_KEY_ID}",
-            "issuer_id": "${FASTLANE_ITC_ISSUER_ID}",
-            "private_key": "${APP_STORE_CONNECT_API_KEY}",
-            "is_p8": true
-          }
-          EOF
-          echo "FASTLANE_API_KEY_FILE=$(pwd)/fastlane_api_key.json" >> $GITHUB_ENV
+          # cat <<EOF > $(pwd)/fastlane_api_key.json
+          # {
+          #   "key_id": "${FASTLANE_ITC_KEY_ID}",
+          #   "issuer_id": "${FASTLANE_ITC_ISSUER_ID}",
+          #   "private_key": "${APP_STORE_CONNECT_API_KEY}",
+          #   "is_p8": true
+          # }
+          # EOF
+          # echo "FASTLANE_API_KEY_FILE=$(pwd)/fastlane_api_key.json" >> $GITHUB_ENV
 
-          # echo "$APP_STORE_CONNECT_API_KEY" > $(pwd)/AuthKey_${{ secrets.FASTLANE_ITC_KEY_ID }}.p8
-          # echo "FASTLANE_API_KEY_FILE=$(pwd)/AuthKey_${{secrets.FASTLANE_ITC_KEY_ID}}.p8" >> $GITHUB_ENV
+          echo "$APP_STORE_CONNECT_API_KEY" > $(pwd)/AuthKey_${{ secrets.FASTLANE_ITC_KEY_ID }}.p8
+          echo "FASTLANE_API_KEY_FILE=$(pwd)/AuthKey_${{secrets.FASTLANE_ITC_KEY_ID}}.p8" >> $GITHUB_ENV
 
       - name: Debug API Key path
         run: |

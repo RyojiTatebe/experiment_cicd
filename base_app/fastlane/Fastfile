@@ -4,6 +4,12 @@ platform :ios do
     # 1. 依存関係のインストール (CocoaPodsなど)
     # cocoapods(clean: true) # 必要であれば
     UI.message("APP_STORE_CONNECT_API_KEY present: #{!ENV['APP_STORE_CONNECT_API_KEY'].nil?}")
+    
+    app_store_connect_api_key(
+      key_id: ENV['FASTLANE_ITC_KEY_ID'],
+      issuer_id: ENV[]'FASTLANE_ITC_ISSUER_ID'],
+      key_file_path: ENV['FASTLANE_API_KEY_FILE']
+    )
 
     # 2. コード署名のセットアップ
     match(
