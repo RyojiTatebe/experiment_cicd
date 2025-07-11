@@ -7,7 +7,7 @@ platform :ios do
     
     app_store_connect_api_key(
       key_id: ENV['FASTLANE_ITC_KEY_ID'],
-      issuer_id: ENV[]'FASTLANE_ITC_ISSUER_ID'],
+      issuer_id: ENV['FASTLANE_ITC_ISSUER_ID'],
       key_file_path: ENV['FASTLANE_API_KEY_FILE']
     )
 
