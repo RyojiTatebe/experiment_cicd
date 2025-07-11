@@ -69,8 +69,18 @@ jobs:
         env:
           APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
         run: |
-          echo "$APP_STORE_CONNECT_API_KEY" > $(pwd)/AuthKey_${{ secrets.FASTLANE_ITC_KEY_ID }}.p8
-          echo "FASTLANE_API_KEY_FILE=$(pwd)/AuthKey_${{secrets.FASTLANE_ITC_KEY_ID}}.p8" >> $GITHUB_ENV
+          cat <<EOF > $(pwd)/fastlane_api_key.json
+          {
+            "key_id": "${FASTLANE_ITC_KEY_ID}",
+            "issuer_id": "${FASTLANE_ITC_ISSUER_ID}",
+            "private_key": "${APP_STORE_CONNECT_API_KEY}",
+            "is_p8": true
+          }
+          EOF
+          echo "FASTLANE_API_KEY_FILE=$(pwd)/fastlane_api_key.json" >> $GITHUB_ENV
+
+          # echo "$APP_STORE_CONNECT_API_KEY" > $(pwd)/AuthKey_${{ secrets.FASTLANE_ITC_KEY_ID }}.p8
+          # echo "FASTLANE_API_KEY_FILE=$(pwd)/AuthKey_${{secrets.FASTLANE_ITC_KEY_ID}}.p8" >> $GITHUB_ENV
 
       - name: Debug API Key path
         run: |
@@ -87,6 +97,7 @@ jobs:
       - name: Distribute iOS build to Firebase App Distribution
         run: |
           cd fastlane
+          
           bundle exec fastlane ios beta_ios # release_notes:'GitHub Actionsからの最新iOSテストビルド - #${{ github.run_number }}''
         working-directory: ./base_app
         env:
