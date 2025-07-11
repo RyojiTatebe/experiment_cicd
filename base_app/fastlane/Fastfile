@@ -8,7 +8,8 @@ platform :ios do
     # 2. コード署名のセットアップ
     match(
       type: "development",
-      api_key_path: ENV['FASTLANE_API_KEY_FILE']
+      api_key_path: ENV['FASTLANE_API_KEY_FILE'],
+      clone_branch_directly: true
       ) # テストビルド用
     # match(type: "appstore") # または App Store Connect API Key を使った自動署名 (推奨)
 
