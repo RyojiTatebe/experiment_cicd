@@ -69,13 +69,13 @@ jobs:
         env:
           APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
         run: |
-          echo "$APP_STORE_CONNECT_API_KEY" > AuthKey_${{ secrets.FASTLANE_ITC_KEY_ID }}.p8
-          echo "FASTLANE_API_KEY_FILE=AuthKey_${{secrets.FASTLANE_ITC_KEY_ID}}.p8" >> $GITHUB_ENV
+          echo "$APP_STORE_CONNECT_API_KEY" > $(pwd)/AuthKey_${{ secrets.FASTLANE_ITC_KEY_ID }}.p8
+          echo "FASTLANE_API_KEY_FILE=$(pwd)/AuthKey_${{secrets.FASTLANE_ITC_KEY_ID}}.p8" >> $GITHUB_ENV
 
       - name: Debug API Key path
         run: |
           echo "FASTLANE_API_KEY_FILE: ${{env.FASTLANE_API_KEY_FILE}}"
-          if [ -f "${{ env.FASTLANE_API_KEY_FILE}}"]; then
+          if [ -f "${{ env.FASTLANE_API_KEY_FILE }}" ]; then
             echo "File exists at path :"
             cat "${{ env.FASTLANE_API_KEY_FILE }}"
           else
