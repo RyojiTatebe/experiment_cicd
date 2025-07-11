@@ -70,7 +70,7 @@ jobs:
           APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
         run: |
           echo "$APP_STORE_CONNECT_API_KEY" > AuthKey_${{ secrets.FASTLANE_ITC_KEY_ID }}.p8
-          echo "FSTLANE_API_KEY_FILE=$(pwd)/AuthKey_${{secrets.FASTLANE_ITC_KEY_ID}}.p8" >> $GITHUB_ENV
+          echo "FASTLANE_API_KEY_FILE=$(pwd)/AuthKey_${{secrets.FASTLANE_ITC_KEY_ID}}.p8" >> $GITHUB_ENV
 
       - name: Distribute iOS build to Firebase App Distribution
         run: |
