@@ -70,6 +70,8 @@ jobs:
       - name: Create App Store Connect API Key FIle 
         env:
           APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+          FASTLANE_ITC_KEY_ID: ${{ secrets.FASTLANE_ITC_KEY_ID }}
+          FASTLANE_ITC_ISSUER_ID: ${{ secrets.FASTLANE_ITC_ISSUER_ID }}
         run: |
           cat <<EOF > $(pwd)/fastlane_api_key.json
           {
