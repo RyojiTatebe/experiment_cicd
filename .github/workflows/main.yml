@@ -29,10 +29,10 @@ jobs:
 
       - name: Install Ruby
         uses: ruby/setup-ruby@v1
-        working-directory: ./base_app
         with:
           ruby-version: '3.4.4' # fastlaneが動作するRubyバージョン
           bundler-cache: true
+          working-directory: ./base_app
 
       - name: Install Bundler dependencies
         working-directory: ./base_app
