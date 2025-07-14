@@ -74,6 +74,7 @@ jobs:
             echo "Ruby OpenSSL bundle path: $RUBY_OPENSSL_BUNDLE"
             # otool -L で共有ライブラリの依存関係を確認
             otool -L "$RUBY_OPENSSL_BUNDLE" | grep -i "ssl" || true
+            otool -L "$RUBY_OPENSSL_BUNDLE" | grep -i "crypto" || true 
           else
             echo "Ruby OpenSSL bundle not found. Cannot determine direct linking."
             echo "Attempting to locate Ruby's openssl.bundle more broadly:"
