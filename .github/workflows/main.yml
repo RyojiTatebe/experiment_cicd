@@ -24,6 +24,7 @@ jobs:
         with:
           ruby-version: '3.4.4' # fastlaneが動作するRubyバージョン
           bundler-cache: true
+          RUBY_CONFIGURE_OPTS: "--with-openssl-dir=/opt/homebrew/opt/openssl@3"
 
       - name: Set OpenSSL path
         run: |
