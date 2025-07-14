@@ -23,7 +23,15 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.4.4' # fastlaneが動作するRubyバージョン
-          bundle-cache: true
+          bundler-cache: true
+
+      - name: Set OpenSSL path
+        run: |
+          echo "export OPENSSL_DIR=/user/lib/ssl" >> $GITHUB_ENV
+          echo "export PATH=$OPENSSL_DIR/bin:$PATH" >> $GITHUB_ENV
+          echo "export LDFLAGS=-L$OPENSSL_DIR/lib" >> $GITHUB_ENV
+          echo "export CPPFLAGS=-I$OPENSSL_DIR/include" >> $GITHUB_ENV
+          echo "export PKG_CONFIG_PATH=$OPENSSL_DIR/lib/pkgconfig" >> $GITHUB_ENV
 
       - name: Install Bundler dependencies
         working-directory: ./base_app
