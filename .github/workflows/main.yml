@@ -112,7 +112,7 @@ jobs:
         run: |
           echo "$API_KEY_CONENT" > AuthKey_$KEY_ID.p8
           chmod 600 AuthKey_$KEY_ID.p8
-        working-directory: ./base_app/fastlane
+        working-directory: ./base_app
 
 
       - name: Create App Store Connect API Key FIle 
@@ -120,6 +120,7 @@ jobs:
           APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
           FASTLANE_ITC_KEY_ID: ${{ secrets.FASTLANE_ITC_KEY_ID }}
           FASTLANE_ITC_ISSUER_ID: ${{ secrets.FASTLANE_ITC_ISSUER_ID }}
+        working-directory: ./base_app
         run: |
           # cat <<EOF > $(pwd)/fastlane_api_key.json
           # {
@@ -132,7 +133,7 @@ jobs:
           # echo "FASTLANE_API_KEY_FILE=$(pwd)/fastlane_api_key.json" >> $GITHUB_ENV
 
           echo "$APP_STORE_CONNECT_API_KEY" > $(pwd)/AuthKey_${{ secrets.FASTLANE_ITC_KEY_ID }}.p8
-          echo "FASTLANE_API_KEY_FILE=$(pwd)/AuthKey_${{secrets.FASTLANE_ITC_KEY_ID}}.p8" >> $GITHUB_ENV
+          echo "FASTLANE_API_KEY_FILE=AuthKey_${{secrets.FASTLANE_ITC_KEY_ID}}.p8" >> $GITHUB_ENV
 
       - name: Debug API Key path
         run: |
@@ -143,8 +144,8 @@ jobs:
           else
             echo "File does not exist at path: ${{ env.FASTLANE_API_KEY_FILE }}"
           fi
-        env:
-          FASTLANE_API_KEY_FILE: ${{ env.FASTLANE_API_KEY_FILE }}
+        # env:
+        #   FASTLANE_API_KEY_FILE: ${{ env.FASTLANE_API_KEY_FILE }}
 
       - name: Distribute iOS build to Firebase App Distribution
         run: |
@@ -156,7 +157,7 @@ jobs:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           BUILD_NUMBER: ${{ github.run_number }} # fastlaneにビルド番号を渡す
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+          # APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
           FASTLANE_ITC_KEY_ID: ${{ secrets.FASTLANE_ITC_KEY_ID }}
           FASTLANE_ITC_ISSUER_ID: ${{ secrets.FASTLANE_ITC_ISSUER_ID }}
           MATCH_GIT_URL: https://x-access-token:${{secrets.CERT_REPO_PAT}}@github.com/RyojiTatebe/certificates.git
