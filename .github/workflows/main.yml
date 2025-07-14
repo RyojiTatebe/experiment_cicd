@@ -136,6 +136,7 @@ jobs:
           echo "FASTLANE_API_KEY_FILE=AuthKey_${{secrets.FASTLANE_ITC_KEY_ID}}.p8" >> $GITHUB_ENV
 
       - name: Debug API Key path
+        working-directory: ./base_app
         run: |
           echo "FASTLANE_API_KEY_FILE: ${{env.FASTLANE_API_KEY_FILE}}"
           if [ -f "${{ env.FASTLANE_API_KEY_FILE }}" ]; then
