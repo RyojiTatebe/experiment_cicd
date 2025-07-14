@@ -106,7 +106,7 @@ jobs:
       #   run: flutter test
 
       - name: Create App Store Connect API Key File
-        evn:
+        env:
           API_KEY_CONENT: ${{secrets.APP_STORE_CONNECT_API_KEY_CONTENT}}
           KEY_ID: ${{secrets.FASTLANE_ITC_KEY_ID}}
         run: |
