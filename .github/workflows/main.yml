@@ -21,6 +21,8 @@ jobs:
 
       - name: Set OpenSSL path
         run: |
+          brew update
+          brew install openssl@3 || true
           echo "export OPENSSL_DIR=/opt/homebrew/opt/openssl@3" >> $GITHUB_ENV
           echo "export PATH=$OPENSSL_DIR/bin:$PATH" >> $GITHUB_ENV
           echo "export PATH=$OPENSSL_DIR/bin:$PATH" >> $GITHUB_ENV
@@ -62,10 +64,15 @@ jobs:
           openssl version
           # openssl ecparam -list_curves
           which openssl
-          ls -l /usr/local/opt/openssl@3 || true
-          ls -l /usr/lib/x86_64-linux-gnu/openssl* || true
-          ls -l /usr/lib/ssl || true
           ls -l /opt/homebrew/opt/openssl@3 || true
+          ruby -ropenssl -e 'puts OpenSSL::OPENSSL_VERSION'
+          RUBY_OPENSSL_GEM_PATH=$(ruby -ropenssl -e 'puts OpenSSL.send(:natibe_library_path)')
+          if [ -f "$RUBY_OPENSSL_GEM_PATH" ] ; then
+            echo "Ruby OpneSSL gen library path: $RUBY_OPENSSL_GEM_PATH"
+            otool -L "$RUBY_OPENSSL_GEM_PATH" | grep -i "openssl" || true
+          else
+            echo "Ruby OpenSSL gem library not fount"
+          fi
 
       - name: Setup fastlane match (for iOS)
         working-directory: ./base_app
