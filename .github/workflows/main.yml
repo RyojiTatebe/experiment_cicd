@@ -68,6 +68,7 @@ jobs:
           ls -l /opt/homebrew/opt/openssl@3 || true
           ruby -ropenssl -e 'puts OpenSSL::OPENSSL_VERSION'
           RUBY_OPENSSL_BUNDLE=$(find "$(ruby -e 'puts RbConfig::CONFIG["libdir"]')/ruby/$(ruby -e 'puts RbConfig::CONFIG["ruby_version"]')/$(ruby -e 'puts RbConfig::CONFIG["arch"]')/" -name "openssl.bundle" 2>/dev/null | head -n 1)
+          RUBY_OPENSSL_BUNDLE=$(find "$(ruby -e 'puts RbConfig::CONFIG["libdir"]')/ruby/$(ruby -e 'puts RbConfig::CONFIG["ruby_version"]')/$(ruby -e 'puts RbConfig::CONFIG["arch"]')/" -name "openssl.bundle" ! -path "*.dSYM*" 2>/dev/null | head -n 1)
 
           if [ -f "$RUBY_OPENSSL_BUNDLE" ]; then
             echo "Ruby OpenSSL bundle path: $RUBY_OPENSSL_BUNDLE"
