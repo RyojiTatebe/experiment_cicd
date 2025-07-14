@@ -29,6 +29,7 @@ jobs:
 
       - name: Install Ruby
         uses: ruby/setup-ruby@v1
+        working-directory: ./base_app
         with:
           ruby-version: '3.4.4' # fastlaneが動作するRubyバージョン
           bundler-cache: true
@@ -57,7 +58,7 @@ jobs:
       - name: OpenSSL debug
         run: |
           openssl version
-          openssl ecparam -list_curves
+          # openssl ecparam -list_curves
           which openssl
           ls -l /usr/local/opt/openssl@3 || true
           ls -l /usr/lib/x86_64-linux-gnu/openssl* || true
