@@ -22,7 +22,8 @@ jobs:
       - name: Install Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.4.0' # fastlaneが動作するRubyバージョン
+          ruby-version: '3.4.4' # fastlaneが動作するRubyバージョン
+          bundle-cache: true
 
       - name: Install Bundler dependencies
         working-directory: ./base_app
