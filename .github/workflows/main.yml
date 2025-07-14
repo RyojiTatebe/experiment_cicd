@@ -132,7 +132,7 @@ jobs:
           # EOF
           # echo "FASTLANE_API_KEY_FILE=$(pwd)/fastlane_api_key.json" >> $GITHUB_ENV
 
-          echo "$APP_STORE_CONNECT_API_KEY" > $(pwd)/AuthKey_${{ secrets.FASTLANE_ITC_KEY_ID }}.p8
+          # echo "$APP_STORE_CONNECT_API_KEY" > $(pwd)/AuthKey_${{ secrets.FASTLANE_ITC_KEY_ID }}.p8
           echo "FASTLANE_API_KEY_FILE=AuthKey_${{secrets.FASTLANE_ITC_KEY_ID}}.p8" >> $GITHUB_ENV
 
       - name: Debug API Key path
