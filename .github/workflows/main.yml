@@ -66,7 +66,7 @@ jobs:
           which openssl
           ls -l /opt/homebrew/opt/openssl@3 || true
           ruby -ropenssl -e 'puts OpenSSL::OPENSSL_VERSION'
-          RUBY_OPENSSL_GEM_PATH=$(ruby -ropenssl -e 'puts OpenSSL::OPENSSL_VERSION)')
+          RUBY_OPENSSL_GEM_PATH=$(ruby -ropenssl -e 'puts OpenSSL::OPENSSL_VERSION')
           if [ -f "$RUBY_OPENSSL_GEM_PATH" ] ; then
             echo "Ruby OpneSSL gen library path: $RUBY_OPENSSL_GEM_PATH"
             otool -L "$RUBY_OPENSSL_GEM_PATH" | grep -i "openssl" || true
