@@ -54,10 +54,15 @@ jobs:
           else
             echo "CERT_REPO_PAT secret is set."
           fi
-      - name:
+      - name: OpenSSL debug
         run: |
           openssl version
           openssl ecparam -list_curves
+          which openssl
+          ls -l /usr/local/opt/openssl@3 || true
+          ls -l /usr/lib/x86_64-linux-gnu/openssl* || true
+          ls -l /usr/lib/ssl || true
+          ls -l /opt/homebrew/opt/openssl@3 || true
 
       - name: Setup fastlane match (for iOS)
         working-directory: ./base_app
