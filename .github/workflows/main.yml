@@ -67,13 +67,19 @@ jobs:
           which openssl
           ls -l /opt/homebrew/opt/openssl@3 || true
           ruby -ropenssl -e 'puts OpenSSL::OPENSSL_VERSION'
-          RUBY_OPENSSL_GEM_PATH=$(ruby -ropenssl -e 'puts OpenSSL::OPENSSL_VERSION')
-          if [ -f "$RUBY_OPENSSL_GEM_PATH" ] ; then
-            echo "Ruby OpneSSL gen library path: $RUBY_OPENSSL_GEM_PATH"
-            otool -L "$RUBY_OPENSSL_GEM_PATH" | grep -i "openssl" || true
+          RUBY_OPENSSL_BUNDLE=$(find "$(ruby -e 'puts RbConfig::CONFIG["libdir"]')/ruby/$(ruby -e 'puts RbConfig::CONFIG["ruby_version"]')/"$(ruby -e 'puts RbConfig::CONFIG["arch"]')/" -name "openssl.bundle" 2>/dev/null | head -n 1)
+
+          if [ -f "$RUBY_OPENSSL_BUNDLE" ]; then
+            echo "Ruby OpenSSL bundle path: $RUBY_OPENSSL_BUNDLE"
+            # otool -L で共有ライブラリの依存関係を確認
+            otool -L "$RUBY_OPENSSL_BUNDLE" | grep -i "ssl" || true
           else
-            echo "Ruby OpenSSL gem library not fount"
+            echo "Ruby OpenSSL bundle not found. Cannot determine direct linking."
+            echo "Attempting to locate Ruby's openssl.bundle more broadly:"
+            # より広範囲での探索を試みる（時間がかかる可能性あり）
+            find /Users/runner -name "openssl.bundle" 2>/dev/null | grep "ruby" || true
           fi
+
 
       - name: Setup fastlane match (for iOS)
         working-directory: ./base_app
