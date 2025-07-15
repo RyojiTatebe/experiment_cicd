@@ -150,6 +150,9 @@ jobs:
           fi
         # env:
         #   FASTLANE_API_KEY_FILE: ${{ env.FASTLANE_API_KEY_FILE }}
+      - name: Clean Flutter build
+        working-directory: ./base_app
+        run: flutter clean
 
       - name: Distribute iOS build to Firebase App Distribution
         run: |
