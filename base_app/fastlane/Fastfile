@@ -37,7 +37,7 @@ platform :ios do
     # ここでは "Runner" Schemeと "Debug" Flavor（ビルド設定）を使用していますが、
     # 必要に応じて "Release" や他のFlavorに変更してください。
     # 例: --release または --flavor Production など
-    sh "flutter build ipa --debug --flavor Debug --output '#{ipa_output_path}'"
+    sh "flutter build ipa --debug --flavor Debug "
 
     # 4. Firebase App Distribution へのアップロード
     firebase_app_distribution(
