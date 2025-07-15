@@ -107,6 +107,10 @@ jobs:
 
       # - name: Run Flutter Tests
       #   run: flutter test
+      - name: Debug Xcode Build Settings
+        working-directory: ./base_app/ios # iosディレクトリに移動
+        run: |
+          xcodebuild -showBuildSettings -workspace Runner.xcworkspace -scheme Runner | grep -E "CODE_SIGN_IDENTITY|PROVISIONING_PROFILE_SPECIFIER|DEVELOPMENT_TEAM"
 
       - name: Create App Store Connect API Key File
         env:

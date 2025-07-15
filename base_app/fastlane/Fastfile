@@ -15,9 +15,8 @@ platform :ios do
     match(
       type: "development",
       api_key: api_key,
-      clone_branch_directly: true,
-      force: true
-      ) # テストビルド用
+      clone_branch_directly: true
+    ) # テストビルド用
     # match(type: "appstore") # または App Store Connect API Key を使った自動署名 (推奨)
 
     # 3. Flutter iOS ビルド
