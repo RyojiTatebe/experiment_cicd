@@ -19,6 +19,9 @@ jobs:
         with:
           channel: 'stable' # 'stable', 'beta', 'dev'
 
+      - name: Accept Xcode license
+        run: sudo xcodebuild -license accept
+
       - name: Set OpenSSL path
         run: |
           brew update
