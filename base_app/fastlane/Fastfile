@@ -37,7 +37,12 @@ platform :ios do
     # ここでは "Runner" Schemeと "Debug" Flavor（ビルド設定）を使用していますが、
     # 必要に応じて "Release" や他のFlavorに変更してください。
     # 例: --release または --flavor Production など
-    sh "flutter build ipa --debug --export-method development"
+    sh "flutter build ipa --debug --export-method development",
+       env: {
+         "FASTLANE_ITC_KEY_ID" => ENV["FASTLANE_ITC_KEY_ID"],
+         "FASTLANE_ITC_ISSUER_ID" => ENV["FASTLANE_ITC_ISSUER_ID"],
+         "FASTLANE_API_KEY_FILE" => ENV["FASTLANE_API_KEY_FILE"]
+       }
 
     # 4. Firebase App Distribution へのアップロード
     firebase_app_distribution(
