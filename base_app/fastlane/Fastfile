@@ -71,7 +71,7 @@ platform :android do
         "--target-platform=android-arm64", # build_android_target_platform に相当
         "--split-per-abi", # build_android_split_per_abi に相当
         "--build-number=#{ENV["BUILD_NUMBER"] || Time.now.to_i.to_s}",
-        "--output=./build/android", # build_android_export_path に相当
+        # "--output=./build/android", # build_android_export_path に相当
 
         # 署名情報
         # これらの引数はflutter build apk/appbundleに直接渡すものです。
