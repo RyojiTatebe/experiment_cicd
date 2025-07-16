@@ -6,40 +6,195 @@ on:
       - develop # 開発ブランチへのプッシュでテストビルドを配布
 
 jobs:
-  build_and_distribute_ios:
-    runs-on: macos-latest # iOSビルドにはmacOS環境が必要
+#   build_and_distribute_ios:
+#     runs-on: macos-latest # iOSビルドにはmacOS環境が必要
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
+#         with:
+#           fetch-depth: 0
+
+#       - name: Setup Flutter
+#         uses: subosito/flutter-action@v2 # Flutter SDKのセットアップ
+#         with:
+#           channel: 'stable' # 'stable', 'beta', 'dev'
+
+#       - name: Accept Xcode license
+#         run: sudo xcodebuild -license accept
+
+#       - name: Set OpenSSL path
+#         run: |
+#           brew update
+#           brew install openssl@3 || true
+#           echo "export OPENSSL_DIR=/opt/homebrew/opt/openssl@3" >> $GITHUB_ENV
+#           echo "export PATH=$OPENSSL_DIR/bin:$PATH" >> $GITHUB_ENV
+#           echo "export PATH=$OPENSSL_DIR/bin:$PATH" >> $GITHUB_ENV
+#           echo "export LDFLAGS=-L$OPENSSL_DIR/lib" >> $GITHUB_ENV
+#           echo "export CPPFLAGS=-I$OPENSSL_DIR/include" >> $GITHUB_ENV
+#           echo "export PKG_CONFIG_PATH=$OPENSSL_DIR/lib/pkgconfig" >> $GITHUB_ENV
+
+#       - name: Install Ruby
+#         uses: ruby/setup-ruby@v1
+#         with:
+#           ruby-version: '3.4.4' # fastlaneが動作するRubyバージョン
+#           openssl-version: '3.5'
+#           bundler-cache: true
+#           working-directory: ./base_app
+
+#       - name: Install Bundler dependencies
+#         working-directory: ./base_app
+#         run: bundle install
+
+#       - name: Install Firebase CLI
+#         run: curl -sL https://firebase.tools | bash
+
+#       # - name: Install CocoaPods (for iOS)
+#       #   working-directory: ./base_app
+#       #   run: |
+#       #     gem install cocoapods # GitHub Actions環境にCocoaPodsをインストール
+#       #     pod repo update # 必要であれば
+#       #     cd ios && pod install --repo-update && cd .. # iOSプロジェクトのPodをインストール
+#       - name: Check if CERT_REPO_PAT secret is set
+#         run: |
+#           if [ -z "${{ secrets.CERT_REPO_PAT }}" ]; then
+#             echo "Error: CERT_REPO_PAT secret is not set or empty!"
+#             exit 1
+#           else
+#             echo "CERT_REPO_PAT secret is set."
+#           fi
+#       - name: OpenSSL debug
+#         run: |
+#           ruby --version
+#           openssl version
+#           # openssl ecparam -list_curves
+#           which openssl
+#           ls -l /opt/homebrew/opt/openssl@3 || true
+#           ruby -ropenssl -e 'puts OpenSSL::OPENSSL_VERSION'
+#           # RUBY_OPENSSL_BUNDLE=$(find "$(ruby -e 'puts RbConfig::CONFIG["libdir"]')/ruby/$(ruby -e 'puts RbConfig::CONFIG["ruby_version"]')/$(ruby -e 'puts RbConfig::CONFIG["arch"]')/" -name "openssl.bundle" 2>/dev/null | head -n 1)
+#           # RUBY_OPENSSL_BUNDLE=$(find "$(ruby -e 'puts RbConfig::CONFIG["libdir"]')/ruby/$(ruby -e 'puts RbConfig::CONFIG["ruby_version"]')/$(ruby -e 'puts RbConfig::CONFIG["arch"]')/" -name "openssl.bundle" 2>/dev/null | head -n 1)
+#           RUBY_OPENSSL_BUNDLE=$(find "$(ruby -e 'puts RbConfig::CONFIG["libdir"]')/ruby/$(ruby -e 'puts RbConfig::CONFIG["ruby_version"]')/$(ruby -e 'puts RbConfig::CONFIG["arch"]')/" -name "openssl.bundle" ! -path "*.dSYM*" 2>/dev/null | head -n 1)
+
+#           if [ -f "$RUBY_OPENSSL_BUNDLE" ]; then
+#             echo "Ruby OpenSSL bundle path: $RUBY_OPENSSL_BUNDLE"
+#             # otool -L で共有ライブラリの依存関係を確認
+#             otool -L "$RUBY_OPENSSL_BUNDLE" | grep -i "ssl" || true
+#             otool -L "$RUBY_OPENSSL_BUNDLE" | grep -i "crypto" || true 
+#           else
+#             echo "Ruby OpenSSL bundle not found. Cannot determine direct linking."
+#             echo "Attempting to locate Ruby's openssl.bundle more broadly:"
+#             # より広範囲での探索を試みる（時間がかかる可能性あり）
+#             find /Users/runner -name "openssl.bundle" 2>/dev/null | grep "ruby" || true
+#           fi
+
+
+#       - name: Setup fastlane match (for iOS)
+#         working-directory: ./base_app
+#         run: |
+#           echo "Debug: MATCH_GIT_URL will be used for cloning."
+#           echo "Debug: Git URL host: $(echo $MATCH_GIT_URL | sed 's/.*@//' | cut -d'/' -f1)"
+#           echo "Debug: Git URL path: $(echo $MATCH_GIT_URL | sed 's/.*@.*github.com//')"
+
+#           bundle exec fastlane match development --readonly # または development
+#         env:
+#           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+#           # App Store Connect API Key を使用する場合 (推奨)
+#           APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
+#           FASTLANE_ITC_KEY_ID: ${{ secrets.FASTLANE_ITC_KEY_ID }}
+#           FASTLANE_ITC_ISSUER_ID: ${{ secrets.FASTLANE_ITC_ISSUER_ID }}
+#           CERT_REPO_PAT: ${{ secrets.CERT_REPO_PAT}}
+#           # MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+#           MATCH_GIT_URL: https://x-access-token:${{secrets.CERT_REPO_PAT}}@github.com/RyojiTatebe/certificates.git
+
+#       # - name: Run Flutter Tests
+#       #   run: flutter test
+#       - name: Debug Xcode Build Settings
+#         working-directory: ./base_app/ios # iosディレクトリに移動
+#         run: |
+#           xcodebuild -showBuildSettings -workspace Runner.xcworkspace -scheme Runner | grep -E "CODE_SIGN_IDENTITY|PROVISIONING_PROFILE_SPECIFIER|DEVELOPMENT_TEAM"
+
+#       - name: Create App Store Connect API Key File
+#         env:
+#           API_KEY_CONENT: ${{secrets.APP_STORE_CONNECT_API_KEY_CONTENT}}
+#           KEY_ID: ${{secrets.FASTLANE_ITC_KEY_ID}}
+#         run: |
+#           echo "$API_KEY_CONENT" > AuthKey_$KEY_ID.p8
+#           chmod 600 AuthKey_$KEY_ID.p8
+#         working-directory: ./base_app
+
+
+#       - name: Create App Store Connect API Key FIle 
+#         env:
+#           APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+#           FASTLANE_ITC_KEY_ID: ${{ secrets.FASTLANE_ITC_KEY_ID }}
+#           FASTLANE_ITC_ISSUER_ID: ${{ secrets.FASTLANE_ITC_ISSUER_ID }}
+#         working-directory: ./base_app
+#         run: |
+#           # cat <<EOF > $(pwd)/fastlane_api_key.json
+#           # {
+#           #   "key_id": "${FASTLANE_ITC_KEY_ID}",
+#           #   "issuer_id": "${FASTLANE_ITC_ISSUER_ID}",
+#           #   "private_key": "${APP_STORE_CONNECT_API_KEY}",
+#           #   "is_p8": true
+#           # }
+#           # EOF
+#           # echo "FASTLANE_API_KEY_FILE=$(pwd)/fastlane_api_key.json" >> $GITHUB_ENV
+
+#           # echo "$APP_STORE_CONNECT_API_KEY" > $(pwd)/AuthKey_${{ secrets.FASTLANE_ITC_KEY_ID }}.p8
+#           echo "FASTLANE_API_KEY_FILE=AuthKey_${{secrets.FASTLANE_ITC_KEY_ID}}.p8" >> $GITHUB_ENV
+
+#       - name: Debug API Key path
+#         working-directory: ./base_app
+#         run: |
+#           echo "FASTLANE_API_KEY_FILE: ${{env.FASTLANE_API_KEY_FILE}}"
+#           if [ -f "${{ env.FASTLANE_API_KEY_FILE }}" ]; then
+#             echo "File exists at path :"
+#             cat "${{ env.FASTLANE_API_KEY_FILE }}"
+#           else
+#             echo "File does not exist at path: ${{ env.FASTLANE_API_KEY_FILE }}"
+#           fi
+#         # env:
+#         #   FASTLANE_API_KEY_FILE: ${{ env.FASTLANE_API_KEY_FILE }}
+#       - name: Clean Flutter build
+#         working-directory: ./base_app
+#         run: flutter clean
+
+#       - name: Distribute iOS build to Firebase App Distribution
+#         run: |
+#           cd fastlane
+          
+#           bundle exec fastlane ios beta_ios # release_notes:'GitHub Actionsからの最新iOSテストビルド - #${{ github.run_number }}''
+#         working-directory: ./base_app
+#         env:
+#           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+#           BUILD_NUMBER: ${{ github.run_number }} # fastlaneにビルド番号を渡す
+#           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+#           # APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+#           FASTLANE_ITC_KEY_ID: ${{ secrets.FASTLANE_ITC_KEY_ID }}
+#           FASTLANE_ITC_ISSUER_ID: ${{ secrets.FASTLANE_ITC_ISSUER_ID }}
+#           MATCH_GIT_URL: https://x-access-token:${{secrets.CERT_REPO_PAT}}@github.com/RyojiTatebe/certificates.git
+
+
+  build_and_distribute_android:
+    runs-on: ubuntu-latest # AndroidビルドはLinuxで可
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2 # Flutter SDKのセットアップ
+        uses: subosito/flutter-action@v2
         with:
-          channel: 'stable' # 'stable', 'beta', 'dev'
+          channel: 'stable'
 
-      - name: Accept Xcode license
-        run: sudo xcodebuild -license accept
-
-      - name: Set OpenSSL path
-        run: |
-          brew update
-          brew install openssl@3 || true
-          echo "export OPENSSL_DIR=/opt/homebrew/opt/openssl@3" >> $GITHUB_ENV
-          echo "export PATH=$OPENSSL_DIR/bin:$PATH" >> $GITHUB_ENV
-          echo "export PATH=$OPENSSL_DIR/bin:$PATH" >> $GITHUB_ENV
-          echo "export LDFLAGS=-L$OPENSSL_DIR/lib" >> $GITHUB_ENV
-          echo "export CPPFLAGS=-I$OPENSSL_DIR/include" >> $GITHUB_ENV
-          echo "export PKG_CONFIG_PATH=$OPENSSL_DIR/lib/pkgconfig" >> $GITHUB_ENV
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17' # Android Studioで推奨されるJavaバージョン
 
       - name: Install Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.4.4' # fastlaneが動作するRubyバージョン
-          openssl-version: '3.5'
-          bundler-cache: true
-          working-directory: ./base_app
+          ruby-version: '3.4.4'
 
       - name: Install Bundler dependencies
         working-directory: ./base_app
@@ -48,176 +203,21 @@ jobs:
       - name: Install Firebase CLI
         run: curl -sL https://firebase.tools | bash
 
-      # - name: Install CocoaPods (for iOS)
-      #   working-directory: ./base_app
-      #   run: |
-      #     gem install cocoapods # GitHub Actions環境にCocoaPodsをインストール
-      #     pod repo update # 必要であれば
-      #     cd ios && pod install --repo-update && cd .. # iOSプロジェクトのPodをインストール
-      - name: Check if CERT_REPO_PAT secret is set
+      - name: Create Android Keystore (for Debug/Release)
         run: |
-          if [ -z "${{ secrets.CERT_REPO_PAT }}" ]; then
-            echo "Error: CERT_REPO_PAT secret is not set or empty!"
-            exit 1
-          else
-            echo "CERT_REPO_PAT secret is set."
-          fi
-      - name: OpenSSL debug
-        run: |
-          ruby --version
-          openssl version
-          # openssl ecparam -list_curves
-          which openssl
-          ls -l /opt/homebrew/opt/openssl@3 || true
-          ruby -ropenssl -e 'puts OpenSSL::OPENSSL_VERSION'
-          # RUBY_OPENSSL_BUNDLE=$(find "$(ruby -e 'puts RbConfig::CONFIG["libdir"]')/ruby/$(ruby -e 'puts RbConfig::CONFIG["ruby_version"]')/$(ruby -e 'puts RbConfig::CONFIG["arch"]')/" -name "openssl.bundle" 2>/dev/null | head -n 1)
-          # RUBY_OPENSSL_BUNDLE=$(find "$(ruby -e 'puts RbConfig::CONFIG["libdir"]')/ruby/$(ruby -e 'puts RbConfig::CONFIG["ruby_version"]')/$(ruby -e 'puts RbConfig::CONFIG["arch"]')/" -name "openssl.bundle" 2>/dev/null | head -n 1)
-          RUBY_OPENSSL_BUNDLE=$(find "$(ruby -e 'puts RbConfig::CONFIG["libdir"]')/ruby/$(ruby -e 'puts RbConfig::CONFIG["ruby_version"]')/$(ruby -e 'puts RbConfig::CONFIG["arch"]')/" -name "openssl.bundle" ! -path "*.dSYM*" 2>/dev/null | head -n 1)
-
-          if [ -f "$RUBY_OPENSSL_BUNDLE" ]; then
-            echo "Ruby OpenSSL bundle path: $RUBY_OPENSSL_BUNDLE"
-            # otool -L で共有ライブラリの依存関係を確認
-            otool -L "$RUBY_OPENSSL_BUNDLE" | grep -i "ssl" || true
-            otool -L "$RUBY_OPENSSL_BUNDLE" | grep -i "crypto" || true 
-          else
-            echo "Ruby OpenSSL bundle not found. Cannot determine direct linking."
-            echo "Attempting to locate Ruby's openssl.bundle more broadly:"
-            # より広範囲での探索を試みる（時間がかかる可能性あり）
-            find /Users/runner -name "openssl.bundle" 2>/dev/null | grep "ruby" || true
-          fi
-
-
-      - name: Setup fastlane match (for iOS)
-        working-directory: ./base_app
-        run: |
-          echo "Debug: MATCH_GIT_URL will be used for cloning."
-          echo "Debug: Git URL host: $(echo $MATCH_GIT_URL | sed 's/.*@//' | cut -d'/' -f1)"
-          echo "Debug: Git URL path: $(echo $MATCH_GIT_URL | sed 's/.*@.*github.com//')"
-
-          bundle exec fastlane match development --readonly # または development
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > android_signing_keystore.jks
         env:
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          # App Store Connect API Key を使用する場合 (推奨)
-          APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
-          FASTLANE_ITC_KEY_ID: ${{ secrets.FASTLANE_ITC_KEY_ID }}
-          FASTLANE_ITC_ISSUER_ID: ${{ secrets.FASTLANE_ITC_ISSUER_ID }}
-          CERT_REPO_PAT: ${{ secrets.CERT_REPO_PAT}}
-          # MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          MATCH_GIT_URL: https://x-access-token:${{secrets.CERT_REPO_PAT}}@github.com/RyojiTatebe/certificates.git
+          KEYSTORE_PATH: android_signing_keystore.jks # fastlaneに渡すパス
 
       # - name: Run Flutter Tests
       #   run: flutter test
-      - name: Debug Xcode Build Settings
-        working-directory: ./base_app/ios # iosディレクトリに移動
-        run: |
-          xcodebuild -showBuildSettings -workspace Runner.xcworkspace -scheme Runner | grep -E "CODE_SIGN_IDENTITY|PROVISIONING_PROFILE_SPECIFIER|DEVELOPMENT_TEAM"
 
-      - name: Create App Store Connect API Key File
-        env:
-          API_KEY_CONENT: ${{secrets.APP_STORE_CONNECT_API_KEY_CONTENT}}
-          KEY_ID: ${{secrets.FASTLANE_ITC_KEY_ID}}
-        run: |
-          echo "$API_KEY_CONENT" > AuthKey_$KEY_ID.p8
-          chmod 600 AuthKey_$KEY_ID.p8
-        working-directory: ./base_app
-
-
-      - name: Create App Store Connect API Key FIle 
-        env:
-          APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
-          FASTLANE_ITC_KEY_ID: ${{ secrets.FASTLANE_ITC_KEY_ID }}
-          FASTLANE_ITC_ISSUER_ID: ${{ secrets.FASTLANE_ITC_ISSUER_ID }}
-        working-directory: ./base_app
-        run: |
-          # cat <<EOF > $(pwd)/fastlane_api_key.json
-          # {
-          #   "key_id": "${FASTLANE_ITC_KEY_ID}",
-          #   "issuer_id": "${FASTLANE_ITC_ISSUER_ID}",
-          #   "private_key": "${APP_STORE_CONNECT_API_KEY}",
-          #   "is_p8": true
-          # }
-          # EOF
-          # echo "FASTLANE_API_KEY_FILE=$(pwd)/fastlane_api_key.json" >> $GITHUB_ENV
-
-          # echo "$APP_STORE_CONNECT_API_KEY" > $(pwd)/AuthKey_${{ secrets.FASTLANE_ITC_KEY_ID }}.p8
-          echo "FASTLANE_API_KEY_FILE=AuthKey_${{secrets.FASTLANE_ITC_KEY_ID}}.p8" >> $GITHUB_ENV
-
-      - name: Debug API Key path
-        working-directory: ./base_app
-        run: |
-          echo "FASTLANE_API_KEY_FILE: ${{env.FASTLANE_API_KEY_FILE}}"
-          if [ -f "${{ env.FASTLANE_API_KEY_FILE }}" ]; then
-            echo "File exists at path :"
-            cat "${{ env.FASTLANE_API_KEY_FILE }}"
-          else
-            echo "File does not exist at path: ${{ env.FASTLANE_API_KEY_FILE }}"
-          fi
-        # env:
-        #   FASTLANE_API_KEY_FILE: ${{ env.FASTLANE_API_KEY_FILE }}
-      - name: Clean Flutter build
-        working-directory: ./base_app
-        run: flutter clean
-
-      - name: Distribute iOS build to Firebase App Distribution
-        run: |
-          cd fastlane
-          
-          bundle exec fastlane ios beta_ios # release_notes:'GitHub Actionsからの最新iOSテストビルド - #${{ github.run_number }}''
-        working-directory: ./base_app
+      - name: Distribute Android build to Firebase App Distribution
+        run: bundle exec fastlane android beta_android release_notes:"GitHub Actionsからの最新Androidテストビルド - #${{ github.run_number }}"
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           BUILD_NUMBER: ${{ github.run_number }} # fastlaneにビルド番号を渡す
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          # APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
-          FASTLANE_ITC_KEY_ID: ${{ secrets.FASTLANE_ITC_KEY_ID }}
-          FASTLANE_ITC_ISSUER_ID: ${{ secrets.FASTLANE_ITC_ISSUER_ID }}
-          MATCH_GIT_URL: https://x-access-token:${{secrets.CERT_REPO_PAT}}@github.com/RyojiTatebe/certificates.git
-
-
-  # build_and_distribute_android:
-  #   runs-on: ubuntu-latest # AndroidビルドはLinuxで可
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
-
-  #     - name: Setup Flutter
-  #       uses: subosito/flutter-action@v2
-  #       with:
-  #         channel: 'stable'
-
-  #     - name: Setup Java
-  #       uses: actions/setup-java@v4
-  #       with:
-  #         distribution: 'temurin'
-  #         java-version: '17' # Android Studioで推奨されるJavaバージョン
-
-  #     - name: Install Ruby
-  #       uses: ruby/setup-ruby@v1
-  #       with:
-  #         ruby-version: '3.4.4'
-
-  #     - name: Install Bundler dependencies
-  #       working-directory: ./base_app
-  #       run: bundle install
-
-  #     - name: Install Firebase CLI
-  #       run: curl -sL https://firebase.tools | bash
-
-  #     - name: Create Android Keystore (for Debug/Release)
-  #       run: |
-  #         echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > android_signing_keystore.jks
-  #       env:
-  #         KEYSTORE_PATH: android_signing_keystore.jks # fastlaneに渡すパス
-
-  #     # - name: Run Flutter Tests
-  #     #   run: flutter test
-
-  #     - name: Distribute Android build to Firebase App Distribution
-  #       run: bundle exec fastlane android beta_android release_notes:"GitHub Actionsからの最新Androidテストビルド - #${{ github.run_number }}"
-  #       env:
-  #         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-  #         BUILD_NUMBER: ${{ github.run_number }} # fastlaneにビルド番号を渡す
-  #         KEYSTORE_PATH: android_signing_keystore.jks # キーストアのパスを渡す
-  #         KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-  #         KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-  #         KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          KEYSTORE_PATH: android_signing_keystore.jks # キーストアのパスを渡す
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
