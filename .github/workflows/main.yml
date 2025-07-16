@@ -213,7 +213,7 @@ jobs:
       #   run: flutter test
 
       - name: Distribute Android build to Firebase App Distribution
-        run: bundle exec fastlane android beta_android release_notes:"GitHub Actionsからの最新Androidテストビルド - #${{ github.run_number }}"
+        run: bundle exec fastlane android beta_android release_notes:"GitHub Actionsからの最新Androidテストビルド "
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           BUILD_NUMBER: ${{ github.run_number }} # fastlaneにビルド番号を渡す
