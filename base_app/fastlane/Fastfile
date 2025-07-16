@@ -63,17 +63,28 @@ platform :android do
   lane :beta_android do |options|
     # 1. Flutter Android ビルド
     flutter(
-      build_android_build_mode: "release", # "debug", "profile", "release"
-      build_android_target_platform: "android-arm64", # "android-arm", "android-arm64", "android-x64", "android-x86", "android-x64"
-      build_android_build_type: "apk", # "apk" or "appbundle"
-      build_android_split_per_abi: true, # APKの場合
-      build_android_build_number: ENV["BUILD_NUMBER"] || Time.now.to_i.to_s,
-      build_android_export_path: "./build/android",
-      # 署名情報（GitHub Actions の Secrets から環境変数として渡す）
-      build_android_signing_keystore_path: ENV["KEYSTORE_PATH"],
-      build_android_signing_keystore_password: ENV["KEYSTORE_PASSWORD"],
-      build_android_signing_key_alias: ENV["KEY_ALIAS"],
-      build_android_signing_key_password: ENV["KEY_PASSWORD"]
+      # flutterコマンドに渡す引数を `args` 配列として指定します
+      args: [
+        "build",
+        "apk", # または "appbundle"
+        "--release", # build_android_build_mode に相当
+        "--target-platform=android-arm64", # build_android_target_platform に相当
+        "--split-per-abi", # build_android_split_per_abi に相当
+        "--build-number=#{ENV["BUILD_NUMBER"] || Time.now.to_i.to_s}",
+        "--output=./build/android", # build_android_export_path に相当
+
+        # 署名情報
+        # これらの引数はflutter build apk/appbundleに直接渡すものです。
+        # Fastlaneが環境変数から取得してくれます。
+        "--build-name=#{Time.now.strftime("%Y.%m.%d")}#{(ENV["BUILD_NUMBER"] || Time.now.to_i.to_s).to_i}",
+        "--split-per-abi",
+        "--signing-keystore=#{ENV["KEYSTORE_PATH"]}",
+        "--signing-store-password=#{ENV["KEYSTORE_PASSWORD"]}",
+        "--signing-key-alias=#{ENV["KEY_ALIAS"]}",
+        "--signing-key-password=#{ENV["KEY_PASSWORD"]}"
+      ]
+      # `capture_stdout` はデフォルトでtrueなので省略してもOK
+      # capture_stdout: true
     )
 
     # 2. Firebase App Distribution へのアップロード
