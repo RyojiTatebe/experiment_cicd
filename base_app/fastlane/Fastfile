@@ -50,7 +50,7 @@ platform :ios do
       firebase_cli_path: "/usr/local/bin/firebase", # CI環境のパスに合わせる
       groups: "testers_ios", # 配布先のグループ名
       release_notes: options[:release_notes] || "Latest iOS build from CI/CD.",
-      debug: false
+      debug: true
     )
 
     # Slackなどへの通知
