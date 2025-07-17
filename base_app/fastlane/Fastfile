@@ -93,6 +93,7 @@ platform :android do
       firebase_cli_path: "/usr/local/bin/firebase", # CI環境のパスに合わせる
       groups: "testers_android", # 配布先のグループ名
       release_notes: options[:release_notes] || "Latest Android build from CI/CD.",
+      apk_path: "./build/app/outputs/flutter-apk/app-arm64-v8a-release.apk"
       debug: false
     )
 
