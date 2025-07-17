@@ -1,13 +1,15 @@
-pluginManagement {
-    val flutterSdkPath = run {
-        val properties = java.util.Properties()
-        file("local.properties").inputStream().use { properties.load(it) }
-        val flutterSdkPath = properties.getProperty("flutter.sdk")
-        require(flutterSdkPath != null) { "flutter.sdk not set in local.properties" }
-        flutterSdkPath
-    }
+val flutterSdkPath = run {
+    val properties = java.util.Properties()
+    file("local.properties").inputStream().use { properties.load(it) }
+    val flutterSdkPath = properties.getProperty("flutter.sdk")
+    require(flutterSdkPath != null) { "flutter.sdk not set in local.properties" }
+    println("DEBUG: flutterSdkPath from local.properties: $flutterSdkPath")
+    flutterSdkPath
+}
+includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
 
-    includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
+pluginManagement {
+
 
     repositories {
         google()
