@@ -77,11 +77,11 @@ platform :android do
         # これらの引数はflutter build apk/appbundleに直接渡すものです。
         # Fastlaneが環境変数から取得してくれます。
         "--build-name=#{Time.now.strftime("%Y.%m.%d")}#{(ENV["BUILD_NUMBER"] || Time.now.to_i.to_s).to_i}",
-        "--split-per-abi",
-        "--signing-keystore=#{ENV["KEYSTORE_PATH"]}",
-        "--signing-store-password=#{ENV["KEYSTORE_PASSWORD"]}",
-        "--signing-key-alias=#{ENV["KEY_ALIAS"]}",
-        "--signing-key-password=#{ENV["KEY_PASSWORD"]}"
+        # "--split-per-abi",
+        # "--signing-keystore=#{ENV["KEYSTORE_PATH"]}",
+        # "--signing-store-password=#{ENV["KEYSTORE_PASSWORD"]}",
+        # "--signing-key-alias=#{ENV["KEY_ALIAS"]}",
+        # "--signing-key-password=#{ENV["KEY_PASSWORD"]}"
       ]
       # `capture_stdout` はデフォルトでtrueなので省略してもOK
       # capture_stdout: true

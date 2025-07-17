@@ -29,12 +29,29 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
+    signingConfigs {
+        create("release") {
+            // 環境変数から値を取得し、nullでなければ設定
+            System.getenv("KEYSTORE_PATH")?.let { keystorePath ->
+                storeFile = file(keystorePath)
+            }
+            System.getenv("KEYSTORE_PASSWORD")?.let { storePasswordValue ->
+                storePassword = storePasswordValue
+            }
+            System.getenv("KEY_ALIAS")?.let { keyAliasValue ->
+                keyAlias = keyAliasValue
+            }
+            System.getenv("KEY_PASSWORD")?.let { keyPasswordValue ->
+                keyPassword = keyPasswordValue
+            }
+        }
+    }
 
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 }

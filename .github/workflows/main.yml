@@ -206,19 +206,27 @@ jobs:
       - name: Create Android Keystore (for Debug/Release)
         run: |
           echo -n "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > android_signing_keystore.jks
+          echo "KEYSTORE_PATH=$(pwd)/android_signing_keystore.jks" >> $GITHUB_ENV
         env:
           KEYSTORE_PATH: android_signing_keystore.jks # fastlaneに渡すパス
 
       # - name: Run Flutter Tests
       #   run: flutter test
+      - name: Set Fastlane Environment Variables
+        run: |
+          echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> $GITHUB_ENV
+          echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> $GITHUB_ENV
+          echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> $GITHUB_ENV
+          echo "BUILD_NUMBER=$(date +%s)" >> $GITHUB_ENV # ビルド番号をタイムスタンプで設定する例
+
 
       - name: Distribute Android build to Firebase App Distribution
         run: bundle exec fastlane android beta_android release_notes:"GitHub Actionsからの最新Androidテストビルド "
         working-directory: ./base_app
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-          BUILD_NUMBER: ${{ github.run_number }} # fastlaneにビルド番号を渡す
-          KEYSTORE_PATH: android_signing_keystore.jks # キーストアのパスを渡す
-          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        # env:
+        #   FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        #   BUILD_NUMBER: ${{ github.run_number }} # fastlaneにビルド番号を渡す
+        #   KEYSTORE_PATH: android_signing_keystore.jks # キーストアのパスを渡す
+        #   KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        #   KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        #   KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
