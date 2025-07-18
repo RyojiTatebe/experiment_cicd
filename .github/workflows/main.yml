@@ -168,7 +168,7 @@ jobs:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           BUILD_NUMBER: ${{ github.run_number }} # fastlaneにビルド番号を渡す
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          # APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+          APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
           FASTLANE_ITC_KEY_ID: ${{ secrets.FASTLANE_ITC_KEY_ID }}
           FASTLANE_ITC_ISSUER_ID: ${{ secrets.FASTLANE_ITC_ISSUER_ID }}
           MATCH_GIT_URL: https://x-access-token:${{secrets.CERT_REPO_PAT}}@github.com/RyojiTatebe/certificates.git
