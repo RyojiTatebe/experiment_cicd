@@ -89,7 +89,7 @@ platform :android do
 
     # 2. Firebase App Distribution へのアップロード
     firebase_app_distribution(
-      app: "com.example.base_app", # Firebase Consoleから取得
+      app: "1:702520135207:android:8a99d1dd18e8b954e3c802", # Firebase Consoleから取得
       firebase_cli_path: "/usr/local/bin/firebase", # CI環境のパスに合わせる
       groups: "testers_android", # 配布先のグループ名
       release_notes: options[:release_notes] || "Latest Android build from CI/CD.",
